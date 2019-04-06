@@ -6,6 +6,7 @@ from scrapy.crawler import CrawlerProcess
 
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 job_smth_urls = []
+sys.setdefaultencoding('utf-8')
 
 class SmthSpider(scrapy.Spider):
     name = 'smth'
@@ -44,9 +45,7 @@ class SmthInfoSpider(scrapy.Spider):
     def parse(self, response):
         title = response.xpath('//title/text()').extract()[0]
         content = response.xpath('//td[@class="a-content"]').extract()[0]
-        print('spider: ', title, content)
-        print('============================')
-        req = requests.post('https://lordvice.com/courses/interninfo/', data={'title':title, 'content':content})
+        req = requests.post('https://lordvice.com/courses/interninfo/', data={'title':title, 'content':content,'other':'smth'})
         print('statuscode', req.status_code)
         print('============================')
 
@@ -74,7 +73,6 @@ class PkuSpider(scrapy.Spider):
             #title = b.xpath('//div[@class="title l limit"]/text()').extract()
             link = self.url_head + b.xpath('a/@href').extract()[0]
             r.lpush('job_pku_urls', link)
-            print("link: ", link)
             jid_max = jid_max + 1
         r.set('pku_job_id_max', jid_max)
         if not r.exists('pku_job_id_current'):
@@ -97,9 +95,6 @@ class PkuInfoSpider(scrapy.Spider):
         title =  response.xpath('//header/h3/text()').extract()[0]
         content = response.xpath('//div[@class="post-main"]/div[@class="content"]/div[@class="body file-read image-click-view"]')[0].extract()
         if '实习' in title or '招聘' in title:
-            print('title', title)
-            print('content', content)
-            print('====================')
             req = requests.post('https://lordvice.com/courses/interninfo/', data={'title':title, 'content':content, 'other':'pku'})
             print('statuscode', req.status_code)
             print('============================')
