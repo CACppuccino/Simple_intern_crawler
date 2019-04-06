@@ -6,7 +6,6 @@ from scrapy.crawler import CrawlerProcess
 
 r = redis.Redis(host='localhost', port=6379, decode_responses=True)
 job_smth_urls = []
-sys.setdefaultencoding('utf-8')
 
 class SmthSpider(scrapy.Spider):
     name = 'smth'
