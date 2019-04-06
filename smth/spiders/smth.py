@@ -23,7 +23,8 @@ class SmthSpider(scrapy.Spider):
                 if num > max:
                     max = num
         r.set('smth_job_id_max', max)
-        r.set('smth_job_id_current', max-100, nx=True)
+        if not r.exists('smth_job_id_current'):
+            r.set('smth_job_id_current', max-100)
 
 
 class SmthInfoSpider(scrapy.Spider):
@@ -76,7 +77,8 @@ class PkuSpider(scrapy.Spider):
             print("link: ", link)
             jid_max = jid_max + 1
         r.set('pku_job_id_max', jid_max)
-        r.setnx('pku_job_id_current', 0)
+        if not r.exists('pku_job_id_current'):
+            r.set('pku_job_id_current', 0)
 
 
 job_pku_urls = []
