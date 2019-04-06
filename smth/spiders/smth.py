@@ -64,7 +64,7 @@ class PkuSpider(scrapy.Spider):
         block = response.xpath('//div[@class="list-item-topic list-item"]')
         #firstpage = block[0].xpath('//div[@class="autho l"]/a[@class="link"]').extract()        
         if r.exists('pku_job_id_max'):
-            jid_max = r.get('pku_job_id_max')
+            jid_max = int(r.get('pku_job_id_max'))
         else:
             jid_max = 0
         job_list = []
