@@ -54,6 +54,7 @@ class PkuSpider(scrapy.Spider):
     url = 'https://bbs.pku.edu.cn/v2/thread.php?bid=896&mode=topic&page='
     url_head = 'https://bbs.pku.edu.cn/v2/'
     start_urls = []
+    jid_max = 0
 
     def __init__(self):
         for i in range(1,5):
@@ -63,7 +64,6 @@ class PkuSpider(scrapy.Spider):
     def parse(self, response):
         block = response.xpath('//div[@class="list-item-topic list-item"]')
         #firstpage = block[0].xpath('//div[@class="autho l"]/a[@class="link"]').extract()        
-        jid_max = 0
         job_list = []
         for b in block:
             #title = b.xpath('//div[@class="title l limit"]/text()').extract()
@@ -71,8 +71,6 @@ class PkuSpider(scrapy.Spider):
             r.lpush('job_pku_urls', link)
             jid_max = jid_max + 1
         r.set('pku_job_id_max', jid_max)
-        if not r.exists('pku_job_id_current'):
-            r.set('pku_job_id_current', 0)
 
 
 job_pku_urls = []
@@ -83,7 +81,6 @@ class PkuInfoSpider(scrapy.Spider):
 
     def __init__(self):
         max = int(r.get('pku_job_id_max'))
-        r.set('pku_job_id_current', max)
         self.start_urls = r.lrange('job_pku_urls', 1, max)
 
     def parse(self, response):
