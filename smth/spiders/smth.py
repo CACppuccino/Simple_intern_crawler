@@ -63,10 +63,7 @@ class PkuSpider(scrapy.Spider):
     def parse(self, response):
         block = response.xpath('//div[@class="list-item-topic list-item"]')
         #firstpage = block[0].xpath('//div[@class="autho l"]/a[@class="link"]').extract()        
-        if r.exists('pku_job_id_max'):
-            jid_max = int(r.get('pku_job_id_max'))
-        else:
-            jid_max = 0
+        jid_max = 0
         job_list = []
         for b in block:
             #title = b.xpath('//div[@class="title l limit"]/text()').extract()
@@ -85,12 +82,12 @@ class PkuInfoSpider(scrapy.Spider):
     allowed_domains = ['pku.edu.cn']
 
     def __init__(self):
-        current = int(r.get('pku_job_id_current'))
         max = int(r.get('pku_job_id_max'))
         r.set('pku_job_id_current', max)
-        self.start_urls = r.lrange('job_pku_urls', current, max)
+        self.start_urls = r.lrange('job_pku_urls', 1, max)
 
     def parse(self, response):
+        print(title)
         title =  response.xpath('//header/h3/text()').extract()[0]
         content = response.xpath('//div[@class="post-main"]/div[@class="content"]/div[@class="body file-read image-click-view"]')[0].extract()
         if '实习' in title or '招聘' in title:
