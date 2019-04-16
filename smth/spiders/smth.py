@@ -84,8 +84,8 @@ class PkuInfoSpider(scrapy.Spider):
         self.start_urls = r.lrange('job_pku_urls', 1, max)
 
     def parse(self, response):
-        print(title)
         title =  response.xpath('//header/h3/text()').extract()[0]
+        print(title)
         content = response.xpath('//div[@class="post-main"]/div[@class="content"]/div[@class="body file-read image-click-view"]')[0].extract()
         if '实习' in title or '招聘' in title:
             req = requests.post('https://lordvice.com/courses/interninfo/', data={'title':title, 'content':content, 'other':'pku'})
