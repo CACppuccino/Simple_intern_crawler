@@ -69,8 +69,8 @@ class PkuSpider(scrapy.Spider):
             #title = b.xpath('//div[@class="title l limit"]/text()').extract()
             link = self.url_head + b.xpath('a/@href').extract()[0]
             r.lpush('job_pku_urls', link)
-            jid_max = jid_max + 1
-        r.set('pku_job_id_max', jid_max)
+            self.jid_max = self.jid_max + 1
+        r.set('pku_job_id_max', self.jid_max)
 
 
 job_pku_urls = []
